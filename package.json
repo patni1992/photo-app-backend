@@ -1,0 +1,11 @@
+{
+	"name": "photo-app-backend",
+	"version": "1.0.0",
+	"main": "app.js",
+	"repository": "https://github.com/patni92/photo-app-backend",
+	"author": "Patrik Nilsson <pn222en@student.lnu.se>",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.16.3"
+	}
+}
