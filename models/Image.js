@@ -4,8 +4,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var ImageSchema = new Schema({
-	data: { data: Buffer, contentType: String },
-	description: String,
+	path: {
+		type: String,
+		required: true
+	},
+	description: {
+		type: String,
+		required: true
+	},
 	tags: [ String ]
 });
 

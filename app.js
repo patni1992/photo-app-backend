@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ storage: storage });
 const mongoDB = 'mongodb://127.0.0.1/my_database';
 const Image = require('./models/Image');
 mongoose.connect(mongoDB);
@@ -25,6 +24,8 @@ var storage = multer.diskStorage({
 	}
 });
 
+const upload = multer({ storage: storage });
+
 app.get('/images', (req, res) => {
 	Image.find({})
 		.then((data) => {
@@ -36,8 +37,14 @@ app.get('/images', (req, res) => {
 });
 
 app.post('/images', upload.any(), (req, res) => {
-	console.log(req.files);
-	console.log(req.body);
-	return res.send();
+	Image.create({
+		description: req.body.description,
+		path: req.files[0].path,
+		tags: req.body.tags.split(',')
+	})
+		.then((data) => res.send(data))
+		.catch(function(err) {
+			res.status(422).send(err.message);
+		});
 });
 app.listen(1337, () => console.log('Example app listening on port 1337!'));
