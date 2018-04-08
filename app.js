@@ -13,10 +13,11 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const app = express();
 
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 var storage = multer.diskStorage({
 	destination: function(req, file, cb) {
-		cb(null, './uploads');
+		cb(null, './public/uploads');
 	},
 	filename: function(req, file, cb) {
 		const extension = file.mimetype.split('/')[1];
@@ -37,9 +38,14 @@ app.get('/images', (req, res) => {
 });
 
 app.post('/images', upload.any(), (req, res) => {
+	let path = req.files[0].path;
+	path = path.split('/');
+	path.shift();
+	path = path.join('/');
+
 	Image.create({
 		description: req.body.description,
-		path: req.files[0].path,
+		path: path,
 		tags: req.body.tags.split(',')
 	})
 		.then((data) => res.send(data))
@@ -47,4 +53,9 @@ app.post('/images', upload.any(), (req, res) => {
 			res.status(422).send(err.message);
 		});
 });
-app.listen(1337, () => console.log('Example app listening on port 1337!'));
+
+app.get('/images/:id', (req, res) => {
+	Image.findById(req.params.id).then((data) => res.send(data));
+});
+
+app.listen(5000, () => console.log('Example app listening on port 5000!'));
