@@ -29,6 +29,7 @@ const upload = multer({ storage: storage });
 
 app.get('/images', (req, res) => {
 	Image.find({})
+		.sort({ createdAt: -1 })
 		.then((data) => {
 			res.send(data);
 		})
