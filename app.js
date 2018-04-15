@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const mongoDB = 'mongodb://127.0.0.1/my_database';
 const Image = require('./models/Image');
+const Comment = require('./models/Comment');
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -56,7 +57,25 @@ app.post('/images', upload.any(), (req, res) => {
 });
 
 app.get('/images/:id', (req, res) => {
-	Image.findById(req.params.id).then((data) => res.send(data));
+	Image.findById(req.params.id).populate('comments').then((data) => res.send(data));
+});
+
+app.post('/images/:id/comments/', (req, res) => {
+	let image;
+	Image.findById(req.params.id)
+		.then((data) => {
+			image = data;
+			return Comment.create({
+				text: req.body.text,
+				Image: data
+			});
+		})
+		.then((data) => {
+			image.comments.unshift(data);
+			image.save();
+			res.send(data);
+		});
+	//	Image.findById(req.params.id).then((data) => res.send(data));
 });
 
 app.listen(5000, () => console.log('Example app listening on port 5000!'));
