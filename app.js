@@ -60,6 +60,10 @@ app.get('/images/:id', (req, res) => {
 	Image.findById(req.params.id).populate('comments').then((data) => res.send(data));
 });
 
+app.delete('/images/:id', (req, res) => {
+	Image.findOneAndRemove(req.params.id).then((data) => res.send(data));
+});
+
 app.post('/images/:id/comments/', (req, res) => {
 	let image;
 	Image.findById(req.params.id)
