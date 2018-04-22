@@ -16,4 +16,17 @@ app.use(express.static('public'));
 
 app.use(require('./routes'));
 
+app.use(function(err, req, res, next) {
+	console.log(err.stack);
+
+	res.status(err.status || 500);
+
+	res.json({
+		errors: {
+			message: err.message,
+			error: err
+		}
+	});
+});
+
 app.listen(5000, () => console.log('Example app listening on port 5000!'));
