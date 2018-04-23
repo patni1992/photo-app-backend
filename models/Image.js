@@ -13,7 +13,8 @@ var ImageSchema = new Schema({
 		required: true
 	},
 	tags: [ String ],
-	comments: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' } ]
+	comments: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' } ],
+	author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 ImageSchema.set('timestamps', true);

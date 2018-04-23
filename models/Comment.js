@@ -8,7 +8,8 @@ var commentSchema = new Schema({
 		type: String,
 		required: true
 	},
-	image: { type: Schema.Types.ObjectId, ref: 'Image' }
+	image: { type: Schema.Types.ObjectId, ref: 'Image' },
+	author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 commentSchema.set('timestamps', true);
