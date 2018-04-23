@@ -31,7 +31,6 @@ router.post('/', upload.any(), (req, res) => {
 	path = path.split('/');
 	path.shift();
 	path = path.join('/');
-
 	Image.create({
 		description: req.body.description,
 		path: path,
@@ -49,6 +48,33 @@ router.get('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
 	Image.findOneAndRemove(req.params.id).then((data) => res.send(data));
+});
+
+router.patch('/:id', upload.any(), (req, res, next) => {
+	Image.findById(req.body.id)
+		.then((image) => {
+			if (req.body.description) {
+				image.description = req.body.description;
+			}
+
+			if (req.body.tags) {
+				image.tags = req.body.tags;
+			}
+
+			if (req.files.length > 0) {
+				let path = req.files[0].path;
+				path = path.split('/');
+				path.shift();
+				path = path.join('/');
+				image.path = path;
+			}
+
+			return image.save();
+		})
+		.then((image) => {
+			res.send(image);
+		})
+		.catch((e) => next(e));
 });
 
 router.post('/:id/comments/', (req, res) => {
