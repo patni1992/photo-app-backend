@@ -28,11 +28,12 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", upload.any(), (req, res) => {
-  let path = req.files[0].path;
+  let path = req.files[0].path.replace(/\\/g,"/");
   path = path.split("/");
   path.shift();
   path = path.join("/");
-  Image.create({
+
+   Image.create({
     description: req.body.description,
     path: path,
     tags: req.body.tags.split(",")
@@ -40,7 +41,7 @@ router.post("/", upload.any(), (req, res) => {
     .then(data => res.send(data))
     .catch(function(err) {
       res.status(422).send(err.message);
-    });
+    }); 
 });
 
 router.get("/:id", (req, res) => {
