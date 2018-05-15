@@ -51,7 +51,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  Image.findOneAndRemove(req.params.id).then(data => res.send(data));
+  Image.findByIdAndRemove(req.params.id).then(data => res.send(data));
 });
 
 router.patch("/:id", upload.any(), (req, res, next) => {
