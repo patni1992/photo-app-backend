@@ -1,29 +1,47 @@
-const { check, validationResult } = require("express-validator/check");
-const { matchedData, sanitize } = require("express-validator/filter");
-module.exports.validate = [
-  (check("email")
-    .isEmail()
-    .withMessage("must be an email")
-    .isLength({ max: 200 })
-    .withMessage("Max length for email is 200 chars")
-    .trim()
-    .normalizeEmail(),
-  check("username")
-    .isLength({ min: 3 })
-    .withMessage("must be at least 3 chars long")
-    .isLength({ max: 200 })
-    .withMessage("Max length for email is 200 chars")
-    .trim(),
-  check("password")
-    .isLength({ min: 3 })
-    .withMessage("must be at least 3 chars long")
-    .isLength({ max: 200 })
-    .withMessage("Max length for password is 200 chars")
-    .custom((value, { req, loc, path }) => {
-      if (value !== req.body.confirmPassword) {
-        throw new Error("Passwords don't match");
-      } else {
-        return value;
-      }
-    })).trim()
-];
+const Validator = require('validator');
+const isEmpty = require('./is-empty');
+
+module.exports = function validateSignup(data) {
+	let errors = {};
+
+	for (const [ key, value ] of Object.entries(data)) {
+		data[key] = !isEmpty(data[key]) ? data[key] : '';
+	}
+
+	if (!Validator.isEmail(data.email)) {
+		errors.email = 'Email is invalid';
+	}
+
+	if (Validator.isEmpty(data.email)) {
+		errors.email = 'Email field is required';
+	}
+
+	if (!Validator.isLength(data.username, { min: 6, max: 30 })) {
+		errors.username = 'Username must be at least 6 characters';
+	}
+
+	if (Validator.isEmpty(data.username)) {
+		errors.username = 'Username field is required';
+	}
+
+	if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
+		errors.password = 'Password must be at least 6 characters';
+	}
+
+	if (Validator.isEmpty(data.password)) {
+		errors.password = 'Password field is required';
+	}
+
+	if (Validator.isEmpty(data.confirmPassword)) {
+		errors.confirmPassword = 'Confirm Password field is required';
+	}
+
+	if (!Validator.equals(data.password, data.confirmPassword)) {
+		errors.confirmPassword = 'Passwords must match';
+	}
+
+	return {
+		errors,
+		isValid: isEmpty(errors)
+	};
+};
