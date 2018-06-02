@@ -1,4 +1,6 @@
 uploads
+mongo-db
+.DS_Store
 config
  Logs
 logs
