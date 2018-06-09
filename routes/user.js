@@ -23,7 +23,7 @@ router.post('/login', (req, res, next) => {
 				return res.status(401).send('Wrong password or username');
 			}
 			if (user.validPassword(req.body.password)) {
-				return res.send(user.generateJWT());
+				return res.send('Bearer ' + user.generateJWT());
 			} else {
 				return res.status(401).send('Wrong password or username');
 			}
