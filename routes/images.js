@@ -48,11 +48,12 @@ router.post('/', auth.required, upload.any(), (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-	console.log(req.params.id);
-	Image.findById(req.params.id).populate('comments').then(data => {
-		console.log(data);
-		res.send(data);
-	});
+	Image.findById(req.params.id)
+		.populate('comments')
+		.populate('author')
+		.then(data => {
+			res.send(data);
+		});
 });
 
 router.delete('/:id', auth.required, (req, res) => {
