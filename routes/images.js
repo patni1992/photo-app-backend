@@ -87,20 +87,30 @@ router.patch('/:id', auth.required, upload.any(), (req, res, next) => {
 		.catch(e => next(e));
 });
 
-router.post('/:id/comments/', auth.required, (req, res, next) => {
+router.post('/:id/comments', auth.required, (req, res, next) => {
 	let image;
 	Image.findById(req.params.id)
 		.then(data => {
 			image = data;
 			return Comment.create({
 				text: req.body.text,
-				Image: data
+				image: data
 			});
 		})
 		.then(data => {
 			image.comments.unshift(data);
 			image.save();
 			res.send(data);
+		})
+		.catch(e => next(e));
+	//	Image.findById(req.params.id).then((data) => res.send(data));
+});
+
+router.get('/:id/comments', auth.required, (req, res, next) => {
+	Image.findById(req.params.id)
+		.populate('comments')
+		.then(image => {
+			res.send(image);
 		})
 		.catch(e => next(e));
 	//	Image.findById(req.params.id).then((data) => res.send(data));

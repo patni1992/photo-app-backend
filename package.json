@@ -20,6 +20,6 @@
 		"database": "mkdir mongo-db; mongod --dbpath mongo-db",
 		"frontend": "npm start --prefix ../photo-app-frontend",
 		"server": "nodemon app.js",
-		"dev": "npm run database | npm run frontend | npm run server"
+		"dev": "npm run frontend | npm run server"
 	}
 }
