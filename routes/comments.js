@@ -6,9 +6,17 @@ const Comment = require('../models/Comment');
 const auth = require('../middleware/auth');
 
 router.get('/', auth.required, (req, res, next) => {
-	Comment.find({}).then(comments => {
-		res.send(comments);
-	});
+	const queryParams = {};
+
+	if (req.query.userId) {
+		queryParams.author = req.query.userId;
+	}
+
+	Comment.find(queryParams)
+		.then(comments => {
+			res.send(comments);
+		})
+		.catch(e => next(e));
 });
 
 router.patch('/:id', auth.required, (req, res, next) => {

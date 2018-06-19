@@ -18,7 +18,13 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/', (req, res) => {
-	Image.find({})
+	const queryParams = {};
+
+	if (req.query.userId) {
+		queryParams.author = req.query.userId;
+	}
+
+	Image.find(queryParams)
 		.populate('author', 'username')
 		.sort({ createdAt: -1 })
 		.then(data => {
@@ -93,6 +99,7 @@ router.post('/:id/comments', auth.required, (req, res, next) => {
 		.then(data => {
 			image = data;
 			return Comment.create({
+				author: req.user.id,
 				text: req.body.text,
 				image: data
 			});
