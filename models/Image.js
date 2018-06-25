@@ -13,7 +13,10 @@ var ImageSchema = new Schema({
 		required: true
 	},
 	tags: [ String ],
-	comments: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' } ],
+	comments: {
+		type: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' } ],
+		select: false
+	},
 	author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
