@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var commentSchema = new Schema({
 	text: {
 		type: String,
-		required: true
+		required: [ true, 'Text is required' ]
 	},
 	image: { type: Schema.Types.ObjectId, ref: 'Image' },
 	author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }

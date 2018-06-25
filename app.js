@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const mongoDB = 'mongodb://127.0.0.1/my_database';
+var _ = require('lodash');
 const Comment = require('./models/Comment');
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
@@ -17,14 +18,11 @@ app.use(express.static('public'));
 app.use(require('./routes'));
 
 app.use(function(err, req, res, next) {
-	console.log(err.stack);
-
+	let message = _.get(err, 'errors.text.message') || err.message;
 	res.status(err.status || 500);
-
 	res.json({
 		errors: {
-			message: err.message,
-			error: err
+			message
 		}
 	});
 });
