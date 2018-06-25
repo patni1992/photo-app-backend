@@ -94,21 +94,23 @@ router.patch('/:id', auth.required, upload.any(), (req, res, next) => {
 });
 
 router.post('/:id/comments', auth.required, (req, res, next) => {
-	let image;
 	Image.findById(req.params.id)
-		.then(data => {
-			image = data;
-			return Comment.create({
+		.select('comments')
+		.then(image => {
+			if (!image) {
+				throw { message: 'Item Not Found', status: 400 };
+			}
+			const comment = new Comment({
 				author: req.user.id,
 				text: req.body.text,
-				image: data
+				image: req.params.id
 			});
+
+			image.comments.push(comment);
+			return Promise.all([ comment.save(), image.save() ]);
 		})
-		.then(data => {
-			image.comments.unshift(data);
-			image.save();
-			res.send(data);
-		})
+		.then(image => Comment.findById(image[0]._id).populate('author'))
+		.then(comment => res.send(comment))
 		.catch(e => next(e));
 	//	Image.findById(req.params.id).then((data) => res.send(data));
 });
@@ -117,7 +119,7 @@ router.get('/:id/comments', auth.required, (req, res, next) => {
 	Image.findById(req.params.id)
 		.populate('comments')
 		.then(image => {
-			res.send(image);
+			res.send(image[0].populate('author'));
 		})
 		.catch(e => next(e));
 	//	Image.findById(req.params.id).then((data) => res.send(data));
