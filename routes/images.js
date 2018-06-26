@@ -54,12 +54,9 @@ router.post('/', auth.required, upload.any(), (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-	Image.findById(req.params.id)
-		.populate('comments')
-		.populate('author')
-		.then(data => {
-			res.send(data);
-		});
+	Image.findById(req.params.id).populate('comments author').then(data => {
+		res.send(data);
+	});
 });
 
 router.delete('/:id', auth.required, (req, res) => {
@@ -83,6 +80,10 @@ router.patch('/:id', auth.required, upload.any(), (req, res, next) => {
 				path.shift();
 				path = path.join('/');
 				image.path = path;
+			}
+
+			if (req.body.tags.length > 0) {
+				image.tags = req.body.tags.split(',');
 			}
 
 			return image.save();
