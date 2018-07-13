@@ -1,4 +1,6 @@
 uploads
+apikeys
+dummyImages.json
 mongo-db
 .DS_Store
 config
