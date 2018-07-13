@@ -1,30 +1,56 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const mongoDB = 'mongodb://127.0.0.1/my_database';
-var _ = require('lodash');
-const Comment = require('./models/Comment');
-mongoose.connect(mongoDB);
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const dbURI = "mongodb://127.0.0.1/my_database";
+var _ = require("lodash");
+const Comment = require("./models/Comment");
+mongoose.connect(dbURI);
 mongoose.Promise = global.Promise;
-const db = mongoose.connection;
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+mongoose.connection.on("connected", function() {
+  console.log("Mongoose connected to " + dbURI);
+});
+mongoose.connection.on("error", function(err) {
+  console.log("Mongoose connection error: " + err);
+});
+mongoose.connection.on("disconnected", function() {
+  console.log("Mongoose disconnected");
+});
+
+gracefulShutdown = function(msg, callback) {
+  mongoose.connection.close(function() {
+    console.log("Mongoose disconnected through " + msg);
+    callback();
+  });
+};
+// For nodemon restarts
+process.once("SIGUSR2", function() {
+  gracefulShutdown("nodemon restart", function() {
+    process.kill(process.pid, "SIGUSR2");
+  });
+});
+// For app termination
+process.on("SIGINT", function() {
+  gracefulShutdown("app termination", function() {
+    process.exit(0);
+  });
+});
 
 const app = express();
 
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static("public"));
 
-app.use(require('./routes'));
+app.use(require("./routes"));
 
 app.use(function(err, req, res, next) {
-	let message = _.get(err, 'errors.text.message') || err.message;
-	res.status(err.status || 500);
-	res.json({
-		errors: {
-			message
-		}
-	});
+  let message = _.get(err, "errors.text.message") || err.message;
+  res.status(err.status || 500);
+  res.json({
+    errors: {
+      message
+    }
+  });
 });
 
-app.listen(5000, () => console.log('Example app listening on port 5000!'));
+app.listen(5000, () => console.log("Example app listening on port 5000!"));
