@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require("./middleware/cors");
 const dbURI = "mongodb://127.0.0.1/my_database";
 var _ = require("lodash");
 const Comment = require("./models/Comment");
@@ -40,6 +41,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
+app.use(cors);
 
 app.use(require("./routes"));
 
