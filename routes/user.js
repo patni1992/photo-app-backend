@@ -22,7 +22,7 @@ router.post("/login", (req, res, next) => {
     return res.status(400).json(errors);
   }
   User.findOne({
-    username: req.body.username
+    $or: [{ username: req.body.username }, { email: req.body.username }]
   })
     .select("hash salt username email")
     .then(user => {
