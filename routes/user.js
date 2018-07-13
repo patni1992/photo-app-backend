@@ -8,17 +8,27 @@ const auth = require('../middleware/auth');
 
 router.post('/login', (req, res, next) => {
 	var user = new User();
-	console.log(req.body);
-	const { errors, isValid } = validateLogin(req.body);
+	let dataObj = Object.assign({
+		password: '',
+		username: ''
+	}, req.body);
+	console.log(dataObj);
+	const {
+		errors,
+		isValid
+	} = validateLogin(dataObj);
 
 	// Check Validation
 	if (!isValid) {
 		return res.status(400).json(errors);
 	}
 	User.findOne({
-		username: req.body.username
-	})
+			username: req.body.username
+		})
+		.select('hash salt username email')
 		.then(user => {
+			console.log('this is user lala');
+			console.log(user);
 			if (!user) {
 				return res.status(401).send('Wrong password or username');
 			}
@@ -31,10 +41,17 @@ router.post('/login', (req, res, next) => {
 		.catch(next);
 });
 
-router.post('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
+	User.find({}).then(user => res.send(user)).catch(next);
+});
+
+router.post('/', function (req, res, next) {
 	var user = new User();
 
-	const { errors, isValid } = validateSignup(req.body);
+	const {
+		errors,
+		isValid
+	} = validateSignup(req.body);
 
 	// Check Validation
 	if (!isValid) {
@@ -47,8 +64,10 @@ router.post('/', function(req, res, next) {
 
 	user
 		.save()
-		.then(function(user) {
-			return res.json({ user });
+		.then(function (user) {
+			return res.json({
+				user
+			});
 		})
 		.catch(next);
 });
