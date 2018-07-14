@@ -1,43 +1,11 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("./middleware/cors");
-const dbURI = "mongodb://127.0.0.1/my_database";
+const db = require("./db");
 var _ = require("lodash");
-const Comment = require("./models/Comment");
-mongoose.connect(dbURI);
-mongoose.Promise = global.Promise;
-
-mongoose.connection.on("connected", function() {
-  console.log("Mongoose connected to " + dbURI);
-});
-mongoose.connection.on("error", function(err) {
-  console.log("Mongoose connection error: " + err);
-});
-mongoose.connection.on("disconnected", function() {
-  console.log("Mongoose disconnected");
-});
-
-gracefulShutdown = function(msg, callback) {
-  mongoose.connection.close(function() {
-    console.log("Mongoose disconnected through " + msg);
-    callback();
-  });
-};
-// For nodemon restarts
-process.once("SIGUSR2", function() {
-  gracefulShutdown("nodemon restart", function() {
-    process.kill(process.pid, "SIGUSR2");
-  });
-});
-// For app termination
-process.on("SIGINT", function() {
-  gracefulShutdown("app termination", function() {
-    process.exit(0);
-  });
-});
 
 const app = express();
+db.init();
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
