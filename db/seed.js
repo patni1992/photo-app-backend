@@ -2,9 +2,9 @@ const faker = require("faker");
 const mongoose = require("mongoose");
 const dbURI = "mongodb://127.0.0.1/my_database";
 let dummyImages = require("./dummyImages.json");
-const User = require("./models/User");
-const Image = require("./models/Image");
-const Comment = require("./models/Comment");
+const User = require("../models/User");
+const Image = require("../models/Image");
+const Comment = require("../models/Comment");
 
 const users = [];
 const images = [];
