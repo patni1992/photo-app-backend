@@ -19,6 +19,7 @@ router.get("/", auth.required, (req, res, next) => {
   Comment.paginate(queryParams, {
     sort: { createdAt: -1 },
     page: parseInt(1),
+    populate: "author",
     limit: parseInt(5)
   })
     .then(comments => {

@@ -22,11 +22,7 @@ var ImageSchema = new Schema({
 });
 
 ImageSchema.post("remove", function(next) {
-  this.model("Comment")
-    .deleteMany({ image: this._id })
-    .then(data => {
-      next();
-    });
+  this.model("Comment").deleteMany({ image: this._id }, next);
 });
 
 ImageSchema.set("timestamps", true);

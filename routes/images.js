@@ -7,6 +7,10 @@ const auth = require("../middleware/auth");
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error("Only image files are allowed!"), false);
+    }
+
     cb(null, "./public/uploads");
   },
   filename: function(req, file, cb) {
@@ -38,8 +42,6 @@ router.get("/", (req, res) => {
     queryParams.$text = { $search: req.query.search };
   }
 
-  console.log(limit);
-
   Image.paginate(queryParams, {
     sort: { createdAt: -1 },
     populate: "author",
@@ -61,8 +63,8 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", auth.required, upload.any(), (req, res) => {
-  let path = req.files[0].path.replace(/\\/g, "/");
+router.post("/", auth.required, upload.single("image"), (req, res) => {
+  let path = req.file.path.replace(/\\/g, "/");
   path = path.split("/");
   path.shift();
   path = path.join("/");
