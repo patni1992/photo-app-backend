@@ -39,7 +39,7 @@ function generateRandomImages(numbersOfImgsToGenerate = 1000) {
       .split(" ");
     image.path = faker.helpers.randomize(dummyImages);
     image.description = faker.lorem.sentence();
-    image.author = users[Math.floor(Math.random() * (users.length - 1))]._id;
+    image.author = users[Math.floor(Math.random() * users.length)]._id;
     images.push(image);
     imagesGroupedById[image._id] = image;
   }
@@ -70,8 +70,8 @@ function generateRandomComments(numbersOfCommentsToGenerate = 5000) {
     startDate.setMonth(startDate.getMonth() - 2);
     comment = new Comment();
     comment.text = faker.lorem.sentence();
-    comment.author = users[Math.floor(Math.random() * (users.length - 1))]._id;
-    comment.image = images[Math.floor(Math.random() * (images.length - 1))]._id;
+    comment.author = users[Math.floor(Math.random() * users.length)]._id;
+    comment.image = images[Math.floor(Math.random() * images.length)]._id;
     comment.createdAt = faker.date.between(startDate, new Date());
     comments.push(comment);
   }
