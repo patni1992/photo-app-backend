@@ -55,22 +55,24 @@ router.get("/", (req, res, next) => {
 });
 
 router.patch("/:userId", upload.any(), (req, res, next) => {
-  User.findById(req.params.userId).then(user => {
-    if (req.files.length > 0) {
-      let path = req.files[0].path;
-      path = path.split("/");
-      path.shift();
-      path = path.join("/");
-      user.profileImage = path;
-    }
+  User.findById(req.params.userId)
+    .then(user => {
+      if (req.files.length > 0) {
+        let path = req.files[0].path;
+        path = path.split("/");
+        path.shift();
+        path = path.join("/");
+        user.profileImage = path;
+      }
 
-    user
-      .save()
-      .then(user => {
-        res.send(user);
-      })
-      .catch(e => next(e));
-  });
+      user
+        .save()
+        .then(user => {
+          res.send(user);
+        })
+        .catch(e => next(e));
+    })
+    .catch(e => next(e));
 });
 
 router.post("/", function(req, res, next) {
