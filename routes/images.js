@@ -90,7 +90,15 @@ router.post("/", auth.required, upload.single("image"), (req, res) => {
 
 router.get("/:id", (req, res) => {
   Image.findById(req.params.id)
-    .populate("comments author")
+    .populate("author")
+    .populate({
+      path: "comments",
+      options: { sort: { created_at: -1 } },
+      populate: {
+        path: "author",
+        model: "User"
+      }
+    })
     .then(data => {
       var r = new RegExp("^(?:[a-z]+:)?//", "i");
 
