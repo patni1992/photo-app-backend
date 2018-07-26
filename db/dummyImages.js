@@ -1,6 +1,6 @@
 const axios = require("axios");
 const fs = require("fs");
-const { unsplash } = require("./config/apikeys");
+const { unsplash } = require("../config/apikeys");
 
 function getImages() {
   let promiseArray = [];
