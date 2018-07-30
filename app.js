@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("./middleware/cors");
 const db = require("./db");
-var _ = require("lodash");
+const _ = require("lodash");
 
 const app = express();
 db.init();

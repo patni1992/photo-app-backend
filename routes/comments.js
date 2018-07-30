@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const mongoose = require("mongoose");
-const Image = require("../models/Image");
 const Comment = require("../models/Comment");
 const auth = require("../middleware/auth");
 

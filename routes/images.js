@@ -5,7 +5,7 @@ const Image = require("../models/Image");
 const Comment = require("../models/Comment");
 const auth = require("../middleware/auth");
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
       return cb(new Error("Only image files are allowed!"), false);
@@ -147,7 +147,6 @@ router.post("/:id/comments", auth.required, (req, res, next) => {
     .then(image => Comment.findById(image[0]._id).populate("author"))
     .then(comment => res.send(comment))
     .catch(e => next(e));
-  //	Image.findById(req.params.id).then((data) => res.send(data));
 });
 
 router.get("/:id/comments", auth.required, (req, res, next) => {
@@ -157,7 +156,6 @@ router.get("/:id/comments", auth.required, (req, res, next) => {
       res.send(image[0].populate("author"));
     })
     .catch(e => next(e));
-  //	Image.findById(req.params.id).then((data) => res.send(data));
 });
 
 module.exports = router;

@@ -1,10 +1,8 @@
-//Require Mongoose
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate");
+const { Schema } = mongoose;
 
-var Schema = mongoose.Schema;
-
-var commentSchema = new Schema({
+const commentSchema = new Schema({
   text: {
     type: String,
     required: [true, "Text is required"]
@@ -16,5 +14,4 @@ var commentSchema = new Schema({
 commentSchema.set("timestamps", true);
 commentSchema.plugin(mongoosePaginate);
 
-// Compile model from schema
 module.exports = mongoose.model("Comment", commentSchema);

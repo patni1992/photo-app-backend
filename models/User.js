@@ -1,11 +1,12 @@
-var mongoose = require("mongoose");
-var uniqueValidator = require("mongoose-unique-validator");
-var crypto = require("crypto");
-var jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+const uniqueValidator = require("mongoose-unique-validator");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const { makeRelativeUrlAbsolute } = require("./plugin");
-var secret = require("../config").secret;
+const secret = require("../config").secret;
 
-var UserSchema = new mongoose.Schema(
+const UserSchema = new Schema(
   {
     username: {
       type: String,
@@ -80,7 +81,7 @@ UserSchema.methods.setPassword = function(password) {
 };
 
 UserSchema.methods.validPassword = function(password) {
-  var hash = crypto
+  const hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
   return this.hash === hash;

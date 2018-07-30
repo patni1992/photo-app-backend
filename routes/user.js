@@ -4,7 +4,7 @@ const validateSignup = require("../validations/signup");
 const validateLogin = require("../validations/login");
 const User = require("../models/User");
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, "./public/uploads");
   },
@@ -17,7 +17,6 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/login", (req, res, next) => {
-  var user = new User();
   let dataObj = Object.assign(
     {
       password: "",
@@ -76,7 +75,7 @@ router.patch("/:userId", upload.any(), (req, res, next) => {
 });
 
 router.post("/", function(req, res, next) {
-  var user = new User();
+  const user = new User();
 
   const { errors, isValid } = validateSignup(req.body);
 

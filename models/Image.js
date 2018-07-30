@@ -1,11 +1,10 @@
 //Require Mongoose
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate");
 const { makeRelativeUrlAbsolute } = require("./plugin");
+const { Schema } = mongoose;
 
-var Schema = mongoose.Schema;
-
-var ImageSchema = new Schema({
+const ImageSchema = new Schema({
   path: {
     type: String,
     required: true

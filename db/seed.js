@@ -1,7 +1,7 @@
 const faker = require("faker");
 const mongoose = require("mongoose");
 const dbURI = "mongodb://127.0.0.1/my_database";
-let dummyImages = require("./dummyImages.json");
+const dummyImages = require("./dummyImages.json");
 const User = require("../models/User");
 const Image = require("../models/Image");
 const Comment = require("../models/Comment");
@@ -31,7 +31,7 @@ mongoose.Promise = global.Promise;
 
 function generateRandomImages(numbersOfImgsToGenerate = 1000) {
   let image;
-  for (var i = 0; i < numbersOfImgsToGenerate; i++) {
+  for (let i = 0; i < numbersOfImgsToGenerate; i++) {
     image = new Image();
 
     image.tags = faker.lorem
@@ -49,7 +49,7 @@ function generateRandomImages(numbersOfImgsToGenerate = 1000) {
 
 function generateRandomUsers(numbersOfUserToGenerate = 100) {
   let user;
-  for (var i = 0; i < numbersOfUserToGenerate; i++) {
+  for (let i = 0; i < numbersOfUserToGenerate; i++) {
     user = new User();
     user.username =
       faker.name.firstName() + (Math.floor(Math.random() * 9) + 1);
@@ -65,7 +65,7 @@ function generateRandomComments(numbersOfCommentsToGenerate = 5000) {
   let comment;
   let commentsGroupedByImageId = {};
   let startDate;
-  for (var i = 0; i < numbersOfCommentsToGenerate; i++) {
+  for (let i = 0; i < numbersOfCommentsToGenerate; i++) {
     startDate = new Date();
     startDate.setMonth(startDate.getMonth() - 2);
     comment = new Comment();
