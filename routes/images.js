@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const { filePath } = require("../config");
 const multer = require("multer");
 const Image = require("../models/Image");
 const Comment = require("../models/Comment");
+const User = require("../models/User");
 const auth = require("../middleware/auth");
 
 const storage = multer.diskStorage({
@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
       return cb(new Error("Only image files are allowed!"), false);
     }
 
-    cb(null, "./public/uploads");
+    cb(null, "public/uploads");
   },
   filename: function(req, file, cb) {
     const extension = file.mimetype.split("/")[1];
@@ -60,22 +60,23 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", auth.required, upload.single("image"), (req, res) => {
-  let path = req.file.path.replace(/\\/g, "/");
-  path = path.split("/");
-  path.shift();
-  path = path.join("/");
-
-  Image.create({
-    description: req.body.description,
-    path: path,
-    tags: req.body.tags.split(","),
-    author: req.user.id
-  })
+router.post("/", auth.required, upload.single("image"), (req, res, next) => {
+  User.findById(req.user.id)
+    .then(user => {
+      if (!user) {
+        throw new Error("Invalid user");
+      }
+      return Image.create({
+        description: req.body.description,
+        path: "/uploads/" + req.file.filename,
+        tags: req.body.tags.split(","),
+        author: req.user.id
+      });
+    })
     .then(data => Image.findById(data._id).populate("author"))
     .then(data => res.send(data))
-    .catch(function(err) {
-      res.status(422).send(err.message);
+    .catch(e => {
+      next(e);
     });
 });
 
@@ -97,36 +98,40 @@ router.delete("/:id", auth.required, (req, res) => {
   Image.findByIdAndRemove(req.params.id).then(data => res.send(data));
 });
 
-router.patch("/:id", auth.required, upload.any(), (req, res, next) => {
-  Image.findById(req.body.id)
-    .then(image => {
-      if (req.body.description) {
-        image.description = req.body.description;
-      }
+router.patch(
+  "/:id",
+  auth.required,
+  upload.single("image"),
+  (req, res, next) => {
+    Image.findById(req.body.id)
+      .then(image => {
+        if (!image) {
+          throw new Error("Image not found");
+        }
+        if (req.body.description) {
+          image.description = req.body.description;
+        }
 
-      if (req.body.tags) {
-        image.tags = req.body.tags;
-      }
+        if (req.body.tags) {
+          image.tags = req.body.tags;
+        }
 
-      if (req.files.length > 0) {
-        let path = req.files[0].path;
-        path = path.split("/");
-        path.shift();
-        path = path.join("/");
-        image.path = path;
-      }
+        if (req.file) {
+          image.path = "/uploads/" + req.file.filename;
+        }
 
-      if (req.body.tags.length > 0) {
-        image.tags = req.body.tags.split(",");
-      }
+        if (req.body.tags.length > 0) {
+          image.tags = req.body.tags.split(",");
+        }
 
-      return image.save();
-    })
-    .then(image => {
-      res.send(image);
-    })
-    .catch(e => next(e));
-});
+        return image.save();
+      })
+      .then(image => {
+        res.send(image);
+      })
+      .catch(e => next(e));
+  }
+);
 
 router.post("/:id/comments", auth.required, (req, res, next) => {
   Image.findById(req.params.id)

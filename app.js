@@ -14,12 +14,12 @@ app.use(cors);
 app.use(require("./routes"));
 
 app.use(function(err, req, res, next) {
+  console.log(err);
+
   let message = _.get(err, "errors.text.message") || err.message;
   res.status(err.status || 500);
   res.json({
-    errors: {
-      message
-    }
+    message
   });
 });
 
