@@ -20,31 +20,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/", imageController.read);
+router
+  .route("/")
+  .get(imageController.read)
+  .post(auth.required, upload.single("image"), imageController.create);
 
-router.get("/:id", imageController.readById);
+router
+  .route("/:id")
+  .get(imageController.readById)
+  .delete(auth.required, imageController.deleteById)
+  .patch(auth.required, upload.single("image"), imageController.updateById);
 
-router.post("/", auth.required, upload.single("image"), imageController.create);
-
-router.delete("/:id", auth.required, imageController.deleteById);
-
-router.patch(
-  "/:id",
-  auth.required,
-  upload.single("image"),
-  imageController.updateById
-);
-
-router.post(
-  "/:id/comments",
-  auth.required,
-  commentController.createCommentByImageId
-);
-
-router.get(
-  "/:id/comments",
-  auth.required,
-  commentController.readCommentsByImageId
-);
+router
+  .route("/:id/comments")
+  .get(auth.required, commentController.readCommentsByImageId)
+  .post(auth.required, commentController.createCommentByImageId);
 
 module.exports = router;

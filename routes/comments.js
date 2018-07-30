@@ -3,10 +3,11 @@ const router = express.Router({ mergeParams: true });
 const commentController = require("../controllers/comment");
 const auth = require("../middleware/auth");
 
-router.get("/", auth.required, commentController.read);
+router.route("/").get(auth.required, commentController.read);
 
-router.patch("/:id", auth.required, commentController.updateById);
-
-router.delete("/:id", auth.required, commentController.deleteById);
+router
+  .route("/:id")
+  .patch(auth.required, commentController.updateById)
+  .delete(auth.required, commentController.deleteById);
 
 module.exports = router;

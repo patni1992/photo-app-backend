@@ -14,14 +14,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/", userController.read);
+router
+  .route("/")
+  .get(userController.read)
+  .post(userController.create);
 
-router.post("/login", userController.login);
+router.route("/login").post(userController.login);
 
-router.patch("/:userId", upload.any(), userController.updateById);
-
-router.post("/", userController.create);
-
-router.delete("/:userId", userController.deleteById);
+router
+  .route("/:userId")
+  .patch(upload.any(), userController.updateById)
+  .delete(userController.deleteById);
 
 module.exports = router;
