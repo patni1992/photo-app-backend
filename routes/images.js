@@ -21,6 +21,12 @@ var storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+router.get("/test", (req, res, next) => {
+  Image.find({})
+    .then(data => res.send(data))
+    .catch(e => next(e));
+});
+
 router.get("/", (req, res) => {
   const queryParams = {};
   let page = 1;
@@ -48,16 +54,7 @@ router.get("/", (req, res) => {
     page: parseInt(page),
     limit: parseInt(limit)
   })
-    .then(data => {
-      // check if url is absolute
-      var r = new RegExp("^(?:[a-z]+:)?//", "i");
-      data.docs.forEach(element => {
-        if (!r.test(element.path)) {
-          element.path = filePath + element.path;
-        }
-      });
-      res.send(data);
-    })
+    .then(data => res.send(data))
     .catch(function(err) {
       res.status(500).send(err);
     });
@@ -76,13 +73,7 @@ router.post("/", auth.required, upload.single("image"), (req, res) => {
     author: req.user.id
   })
     .then(data => Image.findById(data._id).populate("author"))
-    .then(data => {
-      var r = new RegExp("^(?:[a-z]+:)?//", "i");
-      if (!r.test(data.path)) {
-        data.path = filePath + data.path;
-      }
-      res.send(data);
-    })
+    .then(data => res.send(data))
     .catch(function(err) {
       res.status(422).send(err.message);
     });
@@ -99,14 +90,7 @@ router.get("/:id", (req, res) => {
         model: "User"
       }
     })
-    .then(data => {
-      var r = new RegExp("^(?:[a-z]+:)?//", "i");
-
-      if (!r.test(data.path)) {
-        data.path = filePath + data.path;
-      }
-      res.send(data);
-    });
+    .then(data => res.send(data));
 });
 
 router.delete("/:id", auth.required, (req, res) => {

@@ -1,6 +1,7 @@
 //Require Mongoose
 var mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate");
+const { makeRelativeUrlAbsolute } = require("./plugin");
 
 var Schema = mongoose.Schema;
 
@@ -27,7 +28,9 @@ ImageSchema.post("remove", function(next) {
 
 ImageSchema.set("timestamps", true);
 ImageSchema.plugin(mongoosePaginate);
+ImageSchema.plugin(schema => {
+  makeRelativeUrlAbsolute(schema, "path");
+});
 ImageSchema.index({ description: "text" });
 
-// Compile model from schema
 module.exports = mongoose.model("Image", ImageSchema);

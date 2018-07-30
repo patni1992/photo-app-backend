@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var uniqueValidator = require("mongoose-unique-validator");
 var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
+const { makeRelativeUrlAbsolute } = require("./plugin");
 var secret = require("../config").secret;
 
 var UserSchema = new mongoose.Schema(
@@ -57,6 +58,10 @@ UserSchema.plugin(uniqueValidator, {
   message: "is already taken."
 });
 
+UserSchema.plugin(schema => {
+  makeRelativeUrlAbsolute(schema, "profileImage");
+});
+
 UserSchema.pre("remove", function(next) {
   const Image = mongoose.model("Image");
   const Comment = mongoose.model("Comment");
@@ -64,8 +69,7 @@ UserSchema.pre("remove", function(next) {
   Promise.all([
     Image.remove({ author: this._id }),
     Comment.remove({ author: this._id })
-  ])
-  .then(() => next());
+  ]).then(() => next());
 });
 
 UserSchema.methods.setPassword = function(password) {
