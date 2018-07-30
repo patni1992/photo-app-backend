@@ -3,7 +3,6 @@ const { Schema } = mongoose;
 const uniqueValidator = require("mongoose-unique-validator");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const { makeRelativeUrlAbsolute } = require("./plugin");
 const secret = require("../config").secret;
 
 const UserSchema = new Schema(
@@ -57,10 +56,6 @@ const UserSchema = new Schema(
 
 UserSchema.plugin(uniqueValidator, {
   message: "is already taken."
-});
-
-UserSchema.plugin(schema => {
-  makeRelativeUrlAbsolute(schema, "profileImage");
 });
 
 UserSchema.pre("remove", function(next) {
