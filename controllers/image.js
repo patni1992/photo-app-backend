@@ -61,10 +61,18 @@ exports.create = (req, res, next) => {
       if (!user) {
         throw new Error("Invalid user");
       }
+      let tags = "";
+      if (req.body.tags) {
+        tags = req.body.tags;
+      }
+      let filename = null;
+      if (req.file.filename) {
+        filename = "/uploads/" + req.file.filename;
+      }
       return Image.create({
         description: req.body.description,
-        path: "/uploads/" + req.file.filename,
-        tags: req.body.tags.split(","),
+        path: filename,
+        tags: tags.split(","),
         author: req.user.id
       });
     })

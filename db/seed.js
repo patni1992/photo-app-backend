@@ -1,6 +1,6 @@
 const faker = require("faker");
 const mongoose = require("mongoose");
-const dbURI = "mongodb://127.0.0.1/my_database";
+const { dbURI } = require("../config");
 const dummyImages = require("./dummyImages.json");
 const User = require("../models/User");
 const Image = require("../models/Image");
@@ -10,24 +10,6 @@ const users = [];
 const images = [];
 const comments = [];
 const imagesGroupedById = {};
-
-mongoose.connection.on("connected", function() {
-  mongoose.connection.db
-    .dropDatabase()
-    .then(() => init())
-    .then(data => {
-      console.log(
-        `Database cleared & seed completed \ninserted \n${
-          data[0].length
-        } users \n${data[1].length} images \n${data[2].length} comments`
-      );
-      mongoose.connection.close();
-    })
-    .catch(e => console.log(e));
-});
-
-mongoose.connect(dbURI);
-mongoose.Promise = global.Promise;
 
 function generateRandomImages(numbersOfImgsToGenerate = 1000) {
   let image;
@@ -88,14 +70,37 @@ function generateRandomComments(numbersOfCommentsToGenerate = 5000) {
   });
 }
 
-function init() {
-  generateRandomUsers();
-  generateRandomImages();
-  generateRandomComments();
-
-  return Promise.all([
-    User.insertMany(users),
-    Image.insertMany(images),
-    Comment.insertMany(comments)
-  ]).then(result => result);
+function init(
+  imagesToInsert = 1000,
+  usersToInsert = 100,
+  commentsToInsert = 5000
+) {
+  return new Promise((resolve, reject) => {
+    mongoose.connection.on("connected", function() {
+      mongoose.connection.db
+        .dropDatabase()
+        .then(() => {
+          generateRandomUsers(imagesToInsert);
+          generateRandomImages(usersToInsert);
+          generateRandomComments(commentsToInsert);
+          return Promise.all([
+            User.insertMany(users),
+            Image.insertMany(images),
+            Comment.insertMany(comments)
+          ]);
+        })
+        .then(data => {
+          console.log(
+            `Database ${dbURI} cleared & seed completed \ninserted \n${
+              data[0].length
+            } users \n${data[1].length} images \n${data[2].length} comments`
+          );
+          resolve(true);
+        })
+        .catch(e => reject(e));
+    });
+  });
 }
+module.exports = {
+  init
+};

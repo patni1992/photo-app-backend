@@ -86,8 +86,7 @@ UserSchema.methods.generateJWT = function() {
   return jwt.sign(
     {
       id: this._id,
-      username: this.username,
-      profileImage: this.profileImage
+      username: this.username
     },
     secret
   );

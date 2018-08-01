@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
-const dbURI = "mongodb://127.0.0.1/my_database";
+const { dbURI } = require("../config");
 
 function init() {
-  mongoose.connect(dbURI);
+  mongoose.connect(
+    dbURI,
+    { useNewUrlParser: true }
+  );
   mongoose.Promise = global.Promise;
 
   mongoose.connection.on("connected", function() {
@@ -35,4 +38,6 @@ function init() {
   });
 }
 
-module.exports = { init };
+module.exports = {
+  init
+};

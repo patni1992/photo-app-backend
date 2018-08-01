@@ -1,4 +1,5 @@
-const should = require("chai").should();
+process.env.DB_URI = "mongodb://localhost:27017/imagesly_test_db";
+const expect = require("chai").expect;
 const { makeRelativeUrlAbsolute } = require("../../helpers/path");
 const { filePath } = require("../../config");
 
@@ -10,12 +11,12 @@ describe("helpers", function() {
     describe("makeRelativeUrlAbsolute", function() {
 
       it("should make a relative url aboslute", function() {
-        makeRelativeUrlAbsolute("images/hello.jpg").should.equal(filePath + "images/hello.jpg")
+        expect(makeRelativeUrlAbsolute("images/hello.jpg")).equal(filePath + "images/hello.jpg")
     });
       
 
       it("should ignore aboslute url", function() {
-        makeRelativeUrlAbsolute("https://github.com/").should.equal("https://github.com/")
+        expect(makeRelativeUrlAbsolute("https://github.com/")).equal("https://github.com/")
       });
       
     });
