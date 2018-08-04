@@ -26,13 +26,13 @@ const UserSchema = new Schema(
     firstName: {
       type: String
     },
-    lasttName: {
+    lastName: {
       type: String
     },
     country: {
       type: String
     },
-    Bioraphy: {
+    biography: {
       type: String
     },
     profileImage: {
