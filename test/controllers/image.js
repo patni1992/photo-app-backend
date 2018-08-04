@@ -39,9 +39,52 @@ describe("controllers", () => {
             .attach("image", testImage)
             .field("tags", dataToSend.tags)
             .field("description", dataToSend.description)
-            .expect(200);
+            .expect(200)
+            .expect(res => {
+              expect(res.body.description).equal(dataToSend.description);
+              expect(res.body).to.include.keys(
+                "_id",
+                "description",
+                "path",
+                "author"
+              );
+              expect(res.body.tags)
+                .to.be.instanceof(Array)
+                .to.have.all.members(dataToSend.tags.split(","));
+            })
+            .end(done);
+        });
+      });
 
-          done();
+      it("Should", done => {
+        User.findOne({}).then(user => {
+          const testImage = `${__dirname}/dummyCat.jpeg`;
+
+          const dataToSend = {
+            tags: "test1234, hello, test",
+            description: "test image"
+          };
+
+          request(app)
+            .post("/images")
+            .set("Authorization", "Bearer " + user.generateJWT())
+            .attach("image", testImage)
+            .field("tags", dataToSend.tags)
+            .field("description", dataToSend.description)
+            .expect(200)
+            .expect(res => {
+              expect(res.body.description).equal(dataToSend.description);
+              expect(res.body).to.include.keys(
+                "_id",
+                "description",
+                "path",
+                "author"
+              );
+              expect(res.body.tags)
+                .to.be.instanceof(Array)
+                .to.have.all.members(dataToSend.tags.split(","));
+            })
+            .end(done);
         });
       });
     });

@@ -34,7 +34,7 @@ function generateRandomUsers(numbersOfUserToGenerate = 100) {
   for (let i = 0; i < numbersOfUserToGenerate; i++) {
     user = new User();
     user.username =
-      faker.name.firstName() + (Math.floor(Math.random() * 9) + 1);
+      faker.name.firstName() + (Math.floor(Math.random() * 49) + 1);
     user.email = faker.internet.email();
     user.setPassword("123456");
     users.push(user);
@@ -71,17 +71,23 @@ function generateRandomComments(numbersOfCommentsToGenerate = 5000) {
 }
 
 function init(
-  imagesToInsert = 1000,
-  usersToInsert = 100,
-  commentsToInsert = 5000
+  imagesToInsert = 600,
+  usersToInsert = 15,
+  commentsToInsert = 100
 ) {
   return new Promise((resolve, reject) => {
+    mongoose.connect(
+      dbURI,
+      { useNewUrlParser: true }
+    );
+    mongoose.Promise = global.Promise;
+
     mongoose.connection.on("connected", function() {
       mongoose.connection.db
         .dropDatabase()
         .then(() => {
-          generateRandomUsers(imagesToInsert);
-          generateRandomImages(usersToInsert);
+          generateRandomUsers(usersToInsert);
+          generateRandomImages(imagesToInsert);
           generateRandomComments(commentsToInsert);
           return Promise.all([
             User.insertMany(users),
