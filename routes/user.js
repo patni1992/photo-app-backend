@@ -9,6 +9,8 @@ router
 
 router.route("/login").post(userController.login);
 
+router.route("/:userId/stats").get(userController.readStats);
+
 router
   .route("/:userId")
   .patch(uploader.single("image"), userController.updateById)

@@ -1,6 +1,8 @@
 const validateLogin = require("../validations/login");
 const validateSignup = require("../validations/signup");
 const User = require("../models/User");
+const Image = require("../models/Image");
+const Comment = require("../models/Comment");
 
 exports.read = (req, res, next) => {
   User.find({})
@@ -80,6 +82,27 @@ exports.updateById = (req, res, next) => {
           res.send(user);
         })
         .catch(e => next(e));
+    })
+    .catch(e => next(e));
+};
+
+exports.readStats = (req, res, next) => {
+  Promise.all([
+    Image.countDocuments({
+      author: req.params.userId
+    }),
+    Comment.countDocuments({
+      author: req.params.userId
+    }),
+    User.findById(req.params.userId)
+  ])
+    .then(function(values) {
+      res.send({
+        imageCount: values[0],
+        commentCount: values[1],
+        joined: values[2].createdAt,
+        userId: values[2]._id
+      });
     })
     .catch(e => next(e));
 };
