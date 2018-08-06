@@ -110,3 +110,5 @@ function init(
 module.exports = {
   init
 };
+
+require("make-runnable");
