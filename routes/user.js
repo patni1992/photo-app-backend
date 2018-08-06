@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const uploader = require("../middleware/uploader");
+const validateBody = require("../middleware/validateBody");
+const updateUserSchema = require("../validations/updateUser");
 const userController = require("../controllers/user");
 
 router
@@ -13,7 +15,12 @@ router.route("/:userId/stats").get(userController.readStats);
 
 router
   .route("/:userId")
-  .patch(uploader.single("image"), userController.updateById)
+  .get(userController.readById)
+  .patch(
+    uploader.single("image"),
+    validateBody(updateUserSchema),
+    userController.updateById
+  )
   .delete(userController.deleteById);
 
 module.exports = router;

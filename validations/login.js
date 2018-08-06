@@ -1,3 +1,5 @@
+//TODO: Remove Validator validation replace with joi
+
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 

@@ -65,16 +65,14 @@ exports.login = (req, res, next) => {
 exports.updateById = (req, res, next) => {
   User.findById(req.params.userId)
     .then(user => {
-      let filename = null;
-      if (req.file.filename) {
-        filename = "/uploads/" + req.file.filename;
+      if (req.file) {
+        user.profileImage = "/uploads/" + req.file.filename;
       }
 
-      user.profileImage = filename;
-      user.country = req.body.country;
-      user.firstName = req.body.firstName;
-      user.lastName = req.body.lastName;
-      user.biography = req.body.biography;
+      user.country = req.value.body.country;
+      user.firstName = req.value.body.firstName;
+      user.lastName = req.value.body.lastName;
+      user.biography = req.value.body.biography;
 
       user
         .save()
@@ -93,17 +91,20 @@ exports.readStats = (req, res, next) => {
     }),
     Comment.countDocuments({
       author: req.params.userId
-    }),
-    User.findById(req.params.userId)
+    })
   ])
     .then(function(values) {
       res.send({
         imageCount: values[0],
-        commentCount: values[1],
-        joined: values[2].createdAt,
-        userId: values[2]._id
+        commentCount: values[1]
       });
     })
+    .catch(e => next(e));
+};
+
+exports.readById = (req, res, next) => {
+  User.findById(req.params.userId)
+    .then(data => res.send(data))
     .catch(e => next(e));
 };
 
