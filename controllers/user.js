@@ -1,3 +1,4 @@
+const sharp = require("sharp");
 const validateLogin = require("../validations/login");
 const validateSignup = require("../validations/signup");
 const User = require("../models/User");
@@ -65,20 +66,27 @@ exports.login = (req, res, next) => {
 exports.updateById = (req, res, next) => {
   User.findById(req.params.userId)
     .then(user => {
-      if (req.file) {
-        user.profileImage = "/uploads/" + req.file.filename;
-      }
-
       user.country = req.value.body.country;
       user.firstName = req.value.body.firstName;
       user.lastName = req.value.body.lastName;
       user.biography = req.value.body.biography;
 
+      if (req.file) {
+        user.profileImage = "/uploads/" + req.file.filename;
+
+        return sharp("./public/uploads/" + req.file.filename)
+          .resize(100, 100)
+          .toFile(
+            (profileImage = "./public/uploads/" + "thumb-" + req.file.filename)
+          )
+          .then(data => user.save())
+          .then(user => res.send(user))
+          .catch(e => next(e));
+      }
+
       user
         .save()
-        .then(user => {
-          res.send(user);
-        })
+        .then(user => res.send(user))
         .catch(e => next(e));
     })
     .catch(e => next(e));
