@@ -8,11 +8,11 @@ const uploader = require("../middleware/uploader");
 
 router
   .route("/")
-  .get(imageController.read)
+  .get(validateRequest(imageSchema.read), imageController.read)
   .post(
     auth.required,
-    validateRequest(imageSchema.create),
     uploader.single("image"),
+    validateRequest(imageSchema.create),
     imageController.create
   );
 
