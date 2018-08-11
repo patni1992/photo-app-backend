@@ -46,7 +46,8 @@ const UserSchema = new Schema(
     salt: {
       type: String,
       select: false
-    }
+    },
+    __v: { type: Number, select: false }
   },
   {
     timestamps: true,

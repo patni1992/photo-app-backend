@@ -8,7 +8,8 @@ const commentSchema = new Schema({
     required: [true, "Text is required"]
   },
   image: { type: Schema.Types.ObjectId, ref: "Image" },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  __v: { type: Number, select: false }
 });
 
 commentSchema.set("timestamps", true);

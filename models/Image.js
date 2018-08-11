@@ -32,7 +32,8 @@ const ImageSchema = new Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
-  }
+  },
+  __v: { type: Number, select: false }
 });
 
 ImageSchema.post("remove", function(next) {
