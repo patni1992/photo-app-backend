@@ -1,9 +1,7 @@
 const Image = require("../models/Image");
 const User = require("../models/User");
 const sharp = require("sharp");
-const {
-  makeRelativeUrlAbsolute
-} = require("../helpers/path");
+const { makeRelativeUrlAbsolute } = require("../helpers/path");
 
 exports.read = (req, res, next) => {
   const queryParams = {};
@@ -29,13 +27,13 @@ exports.read = (req, res, next) => {
   }
 
   Image.paginate(queryParams, {
-      sort: {
-        createdAt: -1
-      },
-      populate: "author",
-      page: parseInt(page),
-      limit: parseInt(limit)
-    })
+    sort: {
+      createdAt: -1
+    },
+    populate: "author",
+    page: parseInt(page),
+    limit: parseInt(limit)
+  })
     .then(images => {
       images.docs.forEach(image => {
         image.path = makeRelativeUrlAbsolute(image.path);
@@ -43,7 +41,7 @@ exports.read = (req, res, next) => {
 
       res.send(images);
     })
-    .catch(function (err) {
+    .catch(function(err) {
       res.status(500).send(err);
     });
 };
@@ -67,29 +65,30 @@ exports.readById = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
+  const { tags, description } = req.value.body;
+
+  if (!req.file) {
+    throw new Error("Image is required");
+  }
+
   User.findById(req.user.id)
     .then(user => {
       if (!user) {
         throw new Error("Invalid user");
       }
-      let tags = "";
-      if (req.body.tags) {
-        tags = req.body.tags;
-      }
-      let filename = null;
 
-      filename = "/uploads/" + req.file.filename;
       return sharp("./public/uploads/" + req.file.filename)
         .resize(1200, 800)
         .max()
         .toFile("./public/uploads/1" + req.file.filename)
-        .then(() => Image.create({
-          description: req.body.description,
-          path: "/uploads/1" + req.file.filename,
-          tags: tags.split(","),
-          author: req.user.id
-        }))
-
+        .then(() =>
+          Image.create({
+            description: description,
+            path: "/uploads/1" + req.file.filename,
+            tags: tags.split(","),
+            author: req.user.id
+          })
+        );
     })
     .then(data => Image.findById(data._id).populate("author"))
     .then(data => res.send(data))
@@ -97,6 +96,7 @@ exports.create = (req, res, next) => {
       next(e);
     });
 };
+
 exports.deleteById = (req, res, next) => {
   Image.findByIdAndRemove(req.params.id).then(data => res.send(data));
 };
