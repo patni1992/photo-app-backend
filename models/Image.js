@@ -1,9 +1,7 @@
 //Require Mongoose
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate");
-const {
-  Schema
-} = mongoose;
+const { Schema } = mongoose;
 
 const ImageSchema = new Schema({
   path: {
@@ -15,16 +13,20 @@ const ImageSchema = new Schema({
     required: true,
     maxlength: 120
   },
-  tags: [{
-    type: String,
-    maxlength: 15,
-  }],
+  tags: [
+    {
+      type: String,
+      maxlength: 15
+    }
+  ],
 
   comments: {
-    type: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment"
-    }],
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
+      }
+    ],
     select: false
   },
   author: {
@@ -33,10 +35,13 @@ const ImageSchema = new Schema({
   }
 });
 
-ImageSchema.post("remove", function (next) {
-  this.model("Comment").deleteMany({
-    image: this._id
-  }, next);
+ImageSchema.post("remove", function(next) {
+  this.model("Comment").deleteMany(
+    {
+      image: this._id
+    },
+    next
+  );
 });
 
 ImageSchema.set("timestamps", true);
