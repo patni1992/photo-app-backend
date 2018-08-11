@@ -10,7 +10,7 @@ const validateBody = (
     const result = Joi.validate(req.body, schema, options);
 
     if (result.error) {
-      return res.status(400).json(result.error);
+      return next(result);
     }
 
     if (!req.value) {
