@@ -66,11 +66,7 @@ exports.login = (req, res, next) => {
 exports.updateById = (req, res, next) => {
   User.findById(req.params.userId)
     .then(user => {
-      user.country = req.value.body.country;
-      user.firstName = req.value.body.firstName;
-      user.lastName = req.value.body.lastName;
-      user.biography = req.value.body.biography;
-
+      user.set(req.validated.body);
       if (req.file) {
         user.profileImage = "/uploads/" + req.file.filename;
 

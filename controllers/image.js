@@ -65,8 +65,7 @@ exports.readById = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-  const { tags, description } = req.value.body;
-
+  const { tags, description } = req.validated.body;
   if (!req.file) {
     throw new Error("Image is required");
   }
@@ -102,6 +101,7 @@ exports.deleteById = (req, res, next) => {
 };
 
 exports.updateById = (req, res, next) => {
+  const { tags, description } = req.validated.body;
   Image.findById(req.params.id)
     .then(image => {
       if (!image) {
@@ -110,8 +110,11 @@ exports.updateById = (req, res, next) => {
 
       const newImage = {
         ...image.toObject(),
-        ...req.value.body,
-        tags: req.value.body.tags.replace(/,(\s+)?$/, "").split(",")
+        description,
+        tags: tags
+          .replace(/,(\s+)?$/, "")
+          .split(",")
+          .filter(val => val)
       };
 
       if (req.file) {

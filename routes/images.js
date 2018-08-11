@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const validateBody = require("../middleware/validateBody");
-const createImageSchema = require("../validations/createImage");
-const imageUpdateByIdSchema = require("../validations/imageUpdateById");
+const validateRequest = require("../middleware/validateRequest");
+const imageSchema = require("../validations/image");
 const imageController = require("../controllers/image");
 const commentController = require("../controllers/comment");
 const auth = require("../middleware/auth");
@@ -12,19 +11,19 @@ router
   .get(imageController.read)
   .post(
     auth.required,
+    validateRequest(imageSchema.create),
     uploader.single("image"),
-    validateBody(createImageSchema),
     imageController.create
   );
 
 router
   .route("/:id")
-  .get(imageController.readById)
+  .get(validateRequest(imageSchema.readById), imageController.readById)
   .delete(auth.required, imageController.deleteById)
   .patch(
     auth.required,
+    validateRequest(imageSchema.updateById),
     uploader.single("image"),
-    validateBody(imageUpdateByIdSchema),
     imageController.updateById
   );
 

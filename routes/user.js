@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const uploader = require("../middleware/uploader");
-const validateBody = require("../middleware/validateBody");
-const updateUserSchema = require("../validations/updateUser");
+const validateRequest = require("../middleware/validateRequest");
+const userSchema = require("../validations/user");
 const userController = require("../controllers/user");
 
 router
@@ -18,7 +18,7 @@ router
   .get(userController.readById)
   .patch(
     uploader.single("image"),
-    validateBody(updateUserSchema),
+    validateRequest(userSchema.updateById),
     userController.updateById
   )
   .delete(userController.deleteById);
