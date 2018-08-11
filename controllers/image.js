@@ -102,28 +102,23 @@ exports.deleteById = (req, res, next) => {
 };
 
 exports.updateById = (req, res, next) => {
-  Image.findById(req.body.id)
+  Image.findById(req.params.id)
     .then(image => {
       if (!image) {
         throw new Error("Image not found");
       }
-      if (req.body.description) {
-        image.description = req.body.description;
-      }
 
-      if (req.body.tags) {
-        image.tags = req.body.tags;
-      }
+      const newImage = {
+        ...image.toObject(),
+        ...req.value.body,
+        tags: req.value.body.tags.replace(/,(\s+)?$/, "").split(",")
+      };
 
       if (req.file) {
-        image.path = "/uploads/" + req.file.filename;
+        newImage.path = "/uploads/" + req.file.filename;
       }
 
-      if (req.body.tags.length > 0) {
-        image.tags = req.body.tags.split(",");
-      }
-
-      return image.save();
+      return image.set(newImage).save();
     })
     .then(image => {
       res.send(image);

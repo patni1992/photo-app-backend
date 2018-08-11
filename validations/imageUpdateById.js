@@ -3,7 +3,8 @@ const Joi = require("joi");
 const schema = Joi.object().keys({
   description: Joi.string()
     .max(120)
-    .required(),
+    .allow("")
+    .optional(),
   tags: Joi.string()
     .allow("")
     .optional()
