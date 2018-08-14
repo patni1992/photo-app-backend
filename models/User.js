@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate");
 const uniqueValidator = require("mongoose-unique-validator");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const { makeRelativeUrlAbsolute } = require("../helpers/path");
 const secret = require("../config").secret;
 
 const UserSchema = new Schema(
@@ -37,7 +39,7 @@ const UserSchema = new Schema(
     },
     profileImage: {
       type: String,
-      default: "/uploads/dummyCat.jpeg"
+      default: "/uploads/kitten.jpg"
     },
     hash: {
       type: String,
@@ -51,12 +53,18 @@ const UserSchema = new Schema(
   },
   {
     timestamps: true,
-    usePushEach: true
+    usePushEach: true,
+    toObject: { virtuals: true },
+    id: false
   }
 );
 
 UserSchema.plugin(uniqueValidator, {
   message: "is already taken."
+});
+
+UserSchema.virtual("fullPathProfileImage").get(function() {
+  return makeRelativeUrlAbsolute(this.profileImage);
 });
 
 UserSchema.pre("remove", function(next) {
@@ -92,5 +100,7 @@ UserSchema.methods.generateJWT = function() {
     secret
   );
 };
+
+UserSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("User", UserSchema);
