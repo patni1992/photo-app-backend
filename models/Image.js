@@ -60,7 +60,8 @@ ImageSchema.post("remove", function(next) {
 ImageSchema.set("timestamps", true);
 ImageSchema.plugin(mongoosePaginate);
 ImageSchema.index({
-  description: "text"
+  description: "text",
+  tags: "text"
 });
 
 module.exports = mongoose.model("Image", ImageSchema);
