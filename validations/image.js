@@ -12,7 +12,10 @@ module.exports = {
   read: {
     query: Joi.object().keys({
       author: Joi.objectId().max(50),
-      search: Joi.string().max(100),
+      search: Joi.string()
+        .allow("")
+        .optional()
+        .max(100),
       page: Joi.number()
         .integer()
         .greater(0)
