@@ -1,7 +1,6 @@
 const Image = require("../models/Image");
 const User = require("../models/User");
 const sharp = require("sharp");
-const { makeRelativeUrlAbsolute } = require("../helpers/path");
 
 module.exports = {
   read: (req, res, next) => {
@@ -27,13 +26,7 @@ module.exports = {
       page: parseInt(page),
       limit: parseInt(limit)
     })
-      .then(images => {
-        images.docs.forEach(image => {
-          image.path = makeRelativeUrlAbsolute(image.path);
-        });
-
-        res.send(images);
-      })
+      .then(images => res.send(images))
       .catch(function(err) {
         res.status(500).send(err);
       });
@@ -54,7 +47,7 @@ module.exports = {
           model: "User"
         }
       })
-      .then(data => res.send(data));
+      .then(image => res.send(image));
   },
 
   create: (req, res, next) => {
@@ -83,7 +76,7 @@ module.exports = {
           );
       })
       .then(data => Image.findById(data._id).populate("author"))
-      .then(data => res.send(data))
+      .then(image => res.send(image))
       .catch(e => {
         next(e);
       });

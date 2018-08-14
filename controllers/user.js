@@ -7,7 +7,10 @@ const Comment = require("../models/Comment");
 
 exports.read = (req, res, next) => {
   User.find({})
-    .then(user => res.send(user))
+    .then(user => {
+      if (!user) next(new Error("No user found"));
+      return res.send(user);
+    })
     .catch(next);
 };
 
@@ -68,13 +71,11 @@ exports.updateById = (req, res, next) => {
     .then(user => {
       user.set(req.validated.body);
       if (req.file) {
-        user.profileImage = "/uploads/" + req.file.filename;
+        user.profileImage = "/uploads/" + "thumb-" + req.file.filename;
 
         return sharp("./public/uploads/" + req.file.filename)
           .resize(100, 100)
-          .toFile(
-            (profileImage = "./public/uploads/" + "thumb-" + req.file.filename)
-          )
+          .toFile("./public/uploads/" + "thumb-" + req.file.filename)
           .then(data => user.save())
           .then(user => res.send(user))
           .catch(e => next(e));
@@ -108,7 +109,7 @@ exports.readStats = (req, res, next) => {
 
 exports.readById = (req, res, next) => {
   User.findById(req.params.userId)
-    .then(data => res.send(data))
+    .then(user => res.send(user))
     .catch(e => next(e));
 };
 
