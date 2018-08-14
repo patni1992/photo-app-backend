@@ -4,7 +4,7 @@ const cors = require("./middleware/cors");
 const db = require("./db");
 const _ = require("lodash");
 const morgan = require("morgan");
-
+const { port } = require("./config");
 db.init();
 const app = express();
 
@@ -30,6 +30,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(5000, () => console.log("Example app listening on port 5000!"));
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 module.exports.app = app;
