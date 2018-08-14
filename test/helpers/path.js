@@ -1,4 +1,3 @@
-process.env.DB_URI = "mongodb://localhost:27017/imagesly_test_db";
 const expect = require("chai").expect;
 const { makeRelativeUrlAbsolute } = require("../../helpers/path");
 const { filePath } = require("../../config");

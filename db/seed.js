@@ -11,6 +11,13 @@ const images = [];
 const comments = [];
 const imagesGroupedById = {};
 
+mongoose.Promise = global.Promise;
+
+mongoose.connect(
+  dbURI,
+  { useNewUrlParser: true }
+);
+
 function generateRandomImages(numbersOfImgsToGenerate = 1000) {
   let image;
   for (let i = 0; i < numbersOfImgsToGenerate; i++) {
@@ -72,16 +79,10 @@ function generateRandomComments(numbersOfCommentsToGenerate = 5000) {
 
 function init(
   imagesToInsert = 600,
-  usersToInsert = 15,
-  commentsToInsert = 100
+  commentsToInsert = 100,
+  usersToInsert = 15
 ) {
   return new Promise((resolve, reject) => {
-    mongoose.connect(
-      dbURI,
-      { useNewUrlParser: true }
-    );
-    mongoose.Promise = global.Promise;
-
     mongoose.connection.on("connected", function() {
       mongoose.connection.db
         .dropDatabase()
@@ -98,8 +99,8 @@ function init(
         .then(data => {
           console.log(
             `Database ${dbURI} cleared & seed completed \ninserted \n${
-              data[0].length
-            } users \n${data[1].length} images \n${data[2].length} comments`
+              data[1].length
+            } images \n${data[2].length} comments \n${data[1].length} users`
           );
           resolve(true);
         })

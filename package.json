@@ -31,7 +31,7 @@
     "server": "nodemon app.js",
     "dev": "npm run frontend | npm run server",
     "test-watch": "nodemon --exec 'npm test'",
-    "test": "DB_URI=mongodb://localhost:27017/imagesly_test_db mocha --recursive --timeout 10000"
+    "test": "PORT=4999 DB_URI=mongodb://localhost:27017/imagesly_test_db mocha --recursive --timeout 10000"
   },
   "devDependencies": {
     "chai": "^4.1.2",
