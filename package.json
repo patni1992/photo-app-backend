@@ -34,6 +34,7 @@
     "test": "PORT=4999 DB_URI=mongodb://localhost:27017/imagesly_test_db mocha --recursive --timeout 10000"
   },
   "devDependencies": {
+    "apidoc": "^0.17.6",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "supertest": "^3.1.0"
