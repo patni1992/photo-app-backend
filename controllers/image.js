@@ -4,14 +4,12 @@ const sharp = require("sharp");
 
 module.exports = {
   read: (req, res, next) => {
-    const { author, search, page, limit } = req.validated.query;
+    const { userId, search, page, limit } = req.validated.query;
     const formatedQuery = {};
-    const queryParams = { author };
 
-    for (let key in queryParams) {
-      if (queryParams[key]) formatedQuery[key] = queryParams[key];
+    if (userId) {
+      formatedQuery.author = userId;
     }
-
     if (search) {
       formatedQuery.$text = {
         $search: search

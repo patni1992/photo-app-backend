@@ -11,7 +11,7 @@ router
   /**
    * @api {get} /images Read images
    * @apiGroup Images
-   * @apiParam {String} [author]    id of author
+   * @apiParam {String} [userId]    id of author
    * @apiParam {String} [search]    search on description & tags
    * @apiParam {Number} [page]      page number
    * @apiParam {Number} [limit]     results to be returned, default 7 max 30

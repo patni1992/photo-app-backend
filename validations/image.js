@@ -11,7 +11,7 @@ const mongoId = Joi.objectId();
 module.exports = {
   read: {
     query: Joi.object().keys({
-      author: Joi.objectId().max(50),
+      userId: Joi.objectId().max(50),
       search: Joi.string()
         .allow("")
         .optional()
