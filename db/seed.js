@@ -78,9 +78,9 @@ function generateRandomComments(numbersOfCommentsToGenerate = 5000) {
 }
 
 function init(
-  imagesToInsert = 600,
-  commentsToInsert = 100,
-  usersToInsert = 15
+  imagesToInsert = 500,
+  commentsToInsert = 1000,
+  usersToInsert = 20
 ) {
   return new Promise((resolve, reject) => {
     mongoose.connection.on("connected", function() {
@@ -100,7 +100,7 @@ function init(
           console.log(
             `Database ${dbURI} cleared & seed completed \ninserted \n${
               data[1].length
-            } images \n${data[2].length} comments \n${data[1].length} users`
+            } images \n${data[2].length} comments \n${data[0].length} users`
           );
           resolve(true);
         })
