@@ -39,7 +39,7 @@ const UserSchema = new Schema(
     },
     profileImage: {
       type: String,
-      default: "/uploads/kitten.jpg"
+      default: "/img/kitten.jpg"
     },
     hash: {
       type: String,
