@@ -5,7 +5,6 @@ const uniqueValidator = require("mongoose-unique-validator");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const { makeRelativeUrlAbsolute } = require("../helpers/path");
-const secret = require("../config").secret;
 
 const UserSchema = new Schema(
   {
@@ -97,7 +96,7 @@ UserSchema.methods.generateJWT = function() {
       id: this._id,
       username: this.username
     },
-    secret
+    process.env.SECRET
   );
 };
 

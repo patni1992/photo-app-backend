@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
-const { dbURI } = require("../config");
 
 function init() {
   mongoose.connect(
-    dbURI,
+    process.env.DBURI,
     { useNewUrlParser: true }
   );
   mongoose.Promise = global.Promise;
 
   mongoose.connection.on("connected", function() {
-    console.log("Mongoose connected to " + dbURI);
+    console.log("Mongoose connected to " + process.env.DBURI);
   });
   mongoose.connection.on("error", function(err) {
     console.log("Mongoose connection error: " + err);

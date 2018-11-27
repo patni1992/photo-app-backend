@@ -1,6 +1,5 @@
 const axios = require("axios");
 const fs = require("fs");
-const { unsplash } = require("../config/apikeys");
 
 function getImages() {
   let promiseArray = [];
@@ -9,7 +8,7 @@ function getImages() {
     promiseArray.push(
       axios.get("https://api.unsplash.com/photos", {
         params: {
-          client_id: unsplash.client_id,
+          client_id: process.env.UNSPLASH_CLIENT_ID,
           per_page: 30,
           page: i
         }

@@ -4,7 +4,8 @@ const cors = require("./middleware/cors");
 const db = require("./db");
 const _ = require("lodash");
 const morgan = require("morgan");
-const { port } = require("./config");
+require('dotenv').config()
+
 db.init();
 const app = express();
 
@@ -30,6 +31,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`));
 
 module.exports.app = app;

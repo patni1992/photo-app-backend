@@ -1,6 +1,5 @@
 const expect = require("chai").expect;
 const { makeRelativeUrlAbsolute } = require("../../helpers/path");
-const { filePath } = require("../../config");
 
 // prettier-ignore
 describe("helpers", function() {
@@ -10,7 +9,7 @@ describe("helpers", function() {
     describe("makeRelativeUrlAbsolute", function() {
 
       it("should make a relative url aboslute", function() {
-        expect(makeRelativeUrlAbsolute("images/hello.jpg")).equal(filePath + "images/hello.jpg")
+        expect(makeRelativeUrlAbsolute("images/hello.jpg")).equal(process.env.FILEPATH + "images/hello.jpg")
     });
       
 

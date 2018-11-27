@@ -1,6 +1,7 @@
+
+require('dotenv').config({path: '../.env'});
 const faker = require("faker");
 const mongoose = require("mongoose");
-const { dbURI } = require("../config");
 const dummyImages = require("./dummyImages.json");
 const User = require("../models/User");
 const Image = require("../models/Image");
@@ -14,7 +15,7 @@ const imagesGroupedById = {};
 mongoose.Promise = global.Promise;
 
 mongoose.connect(
-  dbURI,
+  process.env.DBURI,
   { useNewUrlParser: true }
 );
 
@@ -98,7 +99,7 @@ function init(
         })
         .then(data => {
           console.log(
-            `Database ${dbURI} cleared & seed completed \ninserted \n${
+            `Database ${process.env.DBURI} cleared & seed completed \ninserted \n${
               data[1].length
             } images \n${data[2].length} comments \n${data[0].length} users`
           );
