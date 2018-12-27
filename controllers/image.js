@@ -60,14 +60,14 @@ module.exports = {
           throw new Error("Invalid user");
         }
 
-        return sharp("./public/uploads/" + req.file.filename)
+        return sharp("./uploads/" + req.file.filename)
           .resize(1200, 800)
           .max()
-          .toFile("./public/uploads/1" + req.file.filename)
+          .toFile("./uploads/1" + req.file.filename)
           .then(() =>
             Image.create({
               description: description,
-              path: "/uploads/1" + req.file.filename,
+              path: "/1" + req.file.filename,
               tags: tags.split(","),
               author: req.user.id
             })
@@ -86,6 +86,7 @@ module.exports = {
 
   updateById: (req, res, next) => {
     const { tags, description } = req.validated.body;
+  
     Image.findById(req.params.id)
       .then(image => {
         if (!image) {
@@ -102,7 +103,7 @@ module.exports = {
         };
 
         if (req.file) {
-          newImage.path = "/uploads/" + req.file.filename;
+          newImage.path = req.file.filename;
         }
 
         return image.set(newImage).save();

@@ -71,11 +71,11 @@ exports.updateById = (req, res, next) => {
     .then(user => {
       user.set(req.validated.body);
       if (req.file) {
-        user.profileImage = "/uploads/" + "thumb-" + req.file.filename;
+        user.profileImage = "/thumb-" + req.file.filename;
 
-        return sharp("./public/uploads/" + req.file.filename)
+        return sharp("./uploads/" + req.file.filename)
           .resize(100, 100)
-          .toFile("./public/uploads/" + "thumb-" + req.file.filename)
+          .toFile("./uploads/" + "thumb-" + req.file.filename)
           .then(data => user.save())
           .then(user => res.send(user))
           .catch(e => next(e));

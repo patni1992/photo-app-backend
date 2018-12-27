@@ -7,7 +7,7 @@ const fs = require('fs');
 const morgan = require("morgan");
 require('dotenv').config()
 
-const uploadFolder = __dirname + "/public/uploads"
+const uploadFolder = __dirname + "/uploads/"
 !fs.existsSync(uploadFolder) && fs.mkdirSync(uploadFolder);
 
 db.init();
@@ -16,11 +16,13 @@ const app = express();
 app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use(express.static("public"));
+app.use(express.static(uploadFolder));
 app.use(cors);
 
 app.use(require("./routes"));
 
 app.use(function(err, req, res, next) {
+  console.log(err)
   if (_.get(err, "error.isJoi")) {
     return res.status(400).json({
       type: err.type,

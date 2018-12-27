@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
       return cb(new Error("Only image files are allowed!"), false);
     }
 
-    cb(null, "public/uploads");
+    cb(null, "uploads");
   },
   filename: function(req, file, cb) {
     const extension = file.mimetype.split("/")[1];

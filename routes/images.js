@@ -163,8 +163,8 @@ router
   .delete(auth.required, imageController.deleteById)
   .patch(
     auth.required,
-    validateRequest(imageSchema.updateById),
     uploader.single("image"),
+    validateRequest(imageSchema.updateById),
     imageController.updateById
   );
 
