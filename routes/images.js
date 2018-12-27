@@ -170,6 +170,13 @@ router
 
 router
   .route("/:id/comments")
+   /**
+   * @api {get} /images/:id/comments Get image by id & include comments
+   * @apiGroup Images
+   * @apiParam {String} id  id of image
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+   */
   .get(auth.required, commentController.readCommentsByImageId)
   .post(auth.required, commentController.createCommentByImageId);
 
