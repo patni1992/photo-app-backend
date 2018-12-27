@@ -8,7 +8,6 @@ const morgan = require("morgan");
 require('dotenv').config()
 
 const uploadFolder = __dirname + "/uploads/"
-!fs.existsSync(uploadFolder) && fs.mkdirSync(uploadFolder);
 
 db.init();
 
