@@ -1,5 +1,6 @@
 apikeys
 dummyImages.json
+public/uploads/
 mongo-db
 .DS_Store
 config
