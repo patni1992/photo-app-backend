@@ -29,6 +29,7 @@
   "scripts": {
     "database": "mkdir mongo-db; mongod --dbpath mongo-db",
     "start": "node app.js",
+    "generate-docs": "apidoc -e node_modules -o public",
     "frontend": "npm start --prefix ../photo-app-frontend",
     "server": "nodemon app.js",
     "dev": "npm run frontend | npm run server",
