@@ -8,8 +8,8 @@ const uploader = require("../middleware/uploader");
 
 router
   .route("/")
-  /**
-   * @api {get} /images Read images
+   /**
+   * @api {get} /images Get images
    * @apiGroup Images
    * @apiParam {String} [userId]    id of author
    * @apiParam {String} [search]    search on description & tags
@@ -110,6 +110,35 @@ router
 
 router
   .route("/:id")
+   /**
+   * @api {get} /images/:id Get image by id
+   * @apiGroup Images
+   * @apiParam {String} id  id of image
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+  {
+    "tags": [
+        "Fast",
+        " 458",
+        " red"
+    ],
+    "comments": [],
+    "_id": "5c251e7d4ac2cf07ea813b50",
+    "description": "Ferrari",
+    "path": "/uploads/11545936509575.jpeg",
+    "author": {
+        "profileImage": "/img/kitten.jpg",
+        "_id": "5c0791ea6271dd122a5a823d",
+        "username": "testman",
+        "email": "test@hotmail.com",
+        "createdAt": "2018-12-05T08:52:58.549Z",
+        "updatedAt": "2018-12-05T08:52:58.549Z",
+        "fullPathProfileImage": "http://localhost:5000/img/kitten.jpg"
+    },
+    "createdAt": "2018-12-27T18:48:29.630Z",
+    "fullPath": "http://localhost:5000/uploads/11545936509575.jpeg"
+ }
+   */
   .get(validateRequest(imageSchema.readById), imageController.readById)
   .delete(auth.required, imageController.deleteById)
   .patch(
