@@ -140,6 +140,26 @@ router
  }
    */
   .get(validateRequest(imageSchema.readById), imageController.readById)
+     /**
+   * @api {delete} /images/:id delete image by id
+   * @apiGroup Images
+   * @apiParam {String} id of image
+   * @apiSuccessExample {json} Success
+   *    HTTP/1.1 200 OK
+  {
+    "tags": [
+        "Fast",
+        " 458",
+        " red"
+    ],
+    "_id": "5c251e7d4ac2cf07ea813b50",
+    "description": "Ferrari",
+    "path": "/uploads/11545936509575.jpeg",
+    "author": "5c0791ea6271dd122a5a823d",
+    "createdAt": "2018-12-27T18:48:29.630Z",
+    "fullPath": "http://localhost:5000/uploads/11545936509575.jpeg"
+}
+   */
   .delete(auth.required, imageController.deleteById)
   .patch(
     auth.required,
