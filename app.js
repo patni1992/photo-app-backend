@@ -3,12 +3,16 @@ const bodyParser = require("body-parser");
 const cors = require("./middleware/cors");
 const db = require("./db");
 const _ = require("lodash");
+const fs = require('fs');
 const morgan = require("morgan");
 require('dotenv').config()
 
-db.init();
-const app = express();
+const uploadFolder = __dirname + "/public/uploads"
+!fs.existsSync(uploadFolder) && fs.mkdirSync(uploadFolder);
 
+db.init();
+
+const app = express();
 app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use(express.static("public"));
