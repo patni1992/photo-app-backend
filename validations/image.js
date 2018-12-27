@@ -40,7 +40,7 @@ module.exports = {
   },
   updateById: {
     body: Joi.object().keys({
-      description: description.allow("").optional(),
+      description: description.required(),
       tags
     })
   }
